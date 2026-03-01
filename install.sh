@@ -4,7 +4,7 @@
 # Trilingual: 日本語 / English / 中文
 #
 # Usage:
-#   curl -fsSL https://raw.githubusercontent.com/ochyai/vibe-local/main/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/cenktekin/vibe-local/main/install.sh | bash
 #   bash install.sh
 #   bash install.sh --model qwen3:8b
 #   bash install.sh --lang en
@@ -964,7 +964,7 @@ if [ -n "$SCRIPT_DIR" ] && [ -f "${SCRIPT_DIR}/vibe-coder.py" ]; then
     cp "${SCRIPT_DIR}/vibe-coder.py" "$LIB_DIR/"
     cp "${SCRIPT_DIR}/vibe-local.sh" "$BIN_DIR/vibe-local"
 else
-    REPO_RAW="https://raw.githubusercontent.com/ochyai/vibe-local/main"
+    REPO_RAW="https://raw.githubusercontent.com/cenktekin/vibe-local/main"
     vapor_info "$(msg source_github)"
     if ! curl -fsSL "${REPO_RAW}/vibe-coder.py" -o "$LIB_DIR/vibe-coder.py"; then
         vapor_error "Failed to download vibe-coder.py from GitHub"
@@ -977,6 +977,7 @@ else
         echo "  Check your internet connection or try again later."
         exit 1
     fi
+    curl -fsSL "${REPO_RAW}/requirements.txt" -o "$LIB_DIR/requirements.txt" 2>/dev/null || true
 fi
 
 chmod +x "$BIN_DIR/vibe-local"
@@ -1097,6 +1098,16 @@ rm -f "$SPINNER_LOG"
 
 # If we reach here, install succeeded — update cleanup to not warn
 _INSTALL_OK=1
+
+# Install pip requirements if present
+if python3 -c "import sys" 2>/dev/null && [ -f "$LIB_DIR/requirements.txt" ]; then
+    vapor_info "Installing dependencies from requirements.txt..."
+    if python3 -m pip install -r "$LIB_DIR/requirements.txt" >/dev/null 2>&1; then
+        vapor_success "Dependencies installed via pip"
+    else
+        vapor_warn "Dependencies install failed"
+    fi
+fi
 
 # ╔══════════════════════════════════════════════════════════════╗
 # ║  🎆  Ｃ Ｏ Ｍ Ｐ Ｌ Ｅ Ｔ Ｅ !!                         ║

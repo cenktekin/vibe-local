@@ -24,7 +24,8 @@ try {
     $OutputEncoding = [System.Text.Encoding]::UTF8
     # chcp 65001 equivalent — switch console code page to UTF-8
     $null = & cmd /c "chcp 65001 >nul 2>&1"
-} catch {
+}
+catch {
     # Older PowerShell versions may not support this — continue anyway
 }
 
@@ -59,181 +60,181 @@ if (-not $Lang) {
 
 $Messages = @{
     ja = @{
-        subtitle = "  無 料 Ａ Ｉ コ ー デ ィ ン グ 環 境"
-        tagline = "ネットワーク不要 ・ 完全無料 ・ ローカルAIコーディング"
-        step1 = "Ｓ Ｙ Ｓ Ｔ Ｅ Ｍ  Ｓ Ｃ Ａ Ｎ"
-        step2 = "Ｍ Ｅ Ｍ Ｏ Ｒ Ｙ  Ａ Ｎ Ａ Ｌ Ｙ Ｓ Ｉ Ｓ"
-        step3 = "Ｐ Ａ Ｃ Ｋ Ａ Ｇ Ｅ  Ｉ Ｎ Ｓ Ｔ Ａ Ｌ Ｌ"
-        step4 = "Ａ Ｉ  Ｍ Ｏ Ｄ Ｅ Ｌ  Ｄ Ｏ Ｗ Ｎ Ｌ Ｏ Ａ Ｄ"
-        step5 = "Ｆ Ｉ Ｌ Ｅ  Ｄ Ｅ Ｐ Ｌ Ｏ Ｙ"
-        step6 = "Ｃ Ｏ Ｎ Ｆ Ｉ Ｇ  Ｇ Ｅ Ｎ Ｅ Ｒ Ａ Ｔ Ｅ"
-        step7 = "Ｓ Ｙ Ｓ Ｔ Ｅ Ｍ  Ｔ Ｅ Ｓ Ｔ"
-        hw_scan = "ハードウェアスキャン中..."
-        windows_ok = "Windows 検出"
-        mem_scan = "メモリ空間マッピング中..."
-        mem_label = "搭載メモリ"
-        model_best = "コーディング最強"
-        model_great = "高性能コーディング"
-        model_min = "最低限動作"
-        model_recommend = "16GB以上のメモリを推奨します"
-        mem_lack = "メモリ不足"
-        mem_lack_min = "最低8GB必要"
-        manual_model = "手動指定モデル"
-        installed = "インストール済み"
-        installing = "インストール中..."
-        install_done = "インストール完了"
-        install_fail = "インストール失敗"
-        install_fail_hint = "手動でインストールしてから再実行してください"
-        ollama_starting = "Ollama を起動中..."
-        ollama_wait = "Ollama 起動待ち中"
-        model_downloading = "モデルをダウンロード中..."
+        subtitle            = "  無 料 Ａ Ｉ コ ー デ ィ ン グ 環 境"
+        tagline             = "ネットワーク不要 ・ 完全無料 ・ ローカルAIコーディング"
+        step1               = "Ｓ Ｙ Ｓ Ｔ Ｅ Ｍ  Ｓ Ｃ Ａ Ｎ"
+        step2               = "Ｍ Ｅ Ｍ Ｏ Ｒ Ｙ  Ａ Ｎ Ａ Ｌ Ｙ Ｓ Ｉ Ｓ"
+        step3               = "Ｐ Ａ Ｃ Ｋ Ａ Ｇ Ｅ  Ｉ Ｎ Ｓ Ｔ Ａ Ｌ Ｌ"
+        step4               = "Ａ Ｉ  Ｍ Ｏ Ｄ Ｅ Ｌ  Ｄ Ｏ Ｗ Ｎ Ｌ Ｏ Ａ Ｄ"
+        step5               = "Ｆ Ｉ Ｌ Ｅ  Ｄ Ｅ Ｐ Ｌ Ｏ Ｙ"
+        step6               = "Ｃ Ｏ Ｎ Ｆ Ｉ Ｇ  Ｇ Ｅ Ｎ Ｅ Ｒ Ａ Ｔ Ｅ"
+        step7               = "Ｓ Ｙ Ｓ Ｔ Ｅ Ｍ  Ｔ Ｅ Ｓ Ｔ"
+        hw_scan             = "ハードウェアスキャン中..."
+        windows_ok          = "Windows 検出"
+        mem_scan            = "メモリ空間マッピング中..."
+        mem_label           = "搭載メモリ"
+        model_best          = "コーディング最強"
+        model_great         = "高性能コーディング"
+        model_min           = "最低限動作"
+        model_recommend     = "16GB以上のメモリを推奨します"
+        mem_lack            = "メモリ不足"
+        mem_lack_min        = "最低8GB必要"
+        manual_model        = "手動指定モデル"
+        installed           = "インストール済み"
+        installing          = "インストール中..."
+        install_done        = "インストール完了"
+        install_fail        = "インストール失敗"
+        install_fail_hint   = "手動でインストールしてから再実行してください"
+        ollama_starting     = "Ollama を起動中..."
+        ollama_wait         = "Ollama 起動待ち中"
+        model_downloading   = "モデルをダウンロード中..."
         model_download_hint = "初回はサイズに応じて数分〜数十分かかります"
-        model_downloaded = "ダウンロード済み"
-        model_dl_done = "ダウンロード完了"
-        file_deploy = "ファイルデプロイ中..."
-        source_local = "ソース: ローカル"
-        source_github = "ソース: GitHub"
-        config_gen = "設定ファイル生成中..."
-        config_exists = "設定ファイルが既に存在 → 既存設定を保持"
-        config_file = "設定ファイル"
-        path_added = "PATH 追加"
-        path_set = "PATH: 設定済み"
-        diag = "システム診断を実行中..."
-        online = "ＯＮＬＩＮＥ"
-        standby = "ＳＴＡＮＤＢＹ"
-        ready = "ＲＥＡＤＹ"
-        warning = "ＷＡＲＮＩＮＧ"
-        loaded = "ＬＯＡＤＥＤ"
-        not_loaded = "未ロード"
-        complete = "ＩＮＳＴＡＬＬ  ＣＯＭＰＬＥＴＥ !!"
-        usage_label = "使い方:"
-        mode_interactive = "対話モード"
-        mode_oneshot = "ワンショット"
-        mode_auto = "ネットワーク自動判定"
-        settings_label = "設定:"
-        label_model = "モデル"
-        label_config = "設定"
-        label_command = "コマンド"
-        reopen = "新しいターミナルを開いてから vibe-local を実行"
-        enjoy = "無 料 Ａ Ｉ コ ー デ ィ ン グ を 楽 し も う"
+        model_downloaded    = "ダウンロード済み"
+        model_dl_done       = "ダウンロード完了"
+        file_deploy         = "ファイルデプロイ中..."
+        source_local        = "ソース: ローカル"
+        source_github       = "ソース: GitHub"
+        config_gen          = "設定ファイル生成中..."
+        config_exists       = "設定ファイルが既に存在 → 既存設定を保持"
+        config_file         = "設定ファイル"
+        path_added          = "PATH 追加"
+        path_set            = "PATH: 設定済み"
+        diag                = "システム診断を実行中..."
+        online              = "ＯＮＬＩＮＥ"
+        standby             = "ＳＴＡＮＤＢＹ"
+        ready               = "ＲＥＡＤＹ"
+        warning             = "ＷＡＲＮＩＮＧ"
+        loaded              = "ＬＯＡＤＥＤ"
+        not_loaded          = "未ロード"
+        complete            = "ＩＮＳＴＡＬＬ  ＣＯＭＰＬＥＴＥ !!"
+        usage_label         = "使い方:"
+        mode_interactive    = "対話モード"
+        mode_oneshot        = "ワンショット"
+        mode_auto           = "ネットワーク自動判定"
+        settings_label      = "設定:"
+        label_model         = "モデル"
+        label_config        = "設定"
+        label_command       = "コマンド"
+        reopen              = "新しいターミナルを開いてから vibe-local を実行"
+        enjoy               = "無 料 Ａ Ｉ コ ー デ ィ ン グ を 楽 し も う"
     }
     en = @{
-        subtitle = "  Ｆ Ｒ Ｅ Ｅ  Ａ Ｉ  Ｃ Ｏ Ｄ Ｉ Ｎ Ｇ  Ｅ Ｎ Ｖ Ｉ Ｒ Ｏ Ｎ Ｍ Ｅ Ｎ Ｔ"
-        tagline = "No Network . Totally Free . Local AI Coding"
-        step1 = "Ｓ Ｙ Ｓ Ｔ Ｅ Ｍ  Ｓ Ｃ Ａ Ｎ"
-        step2 = "Ｍ Ｅ Ｍ Ｏ Ｒ Ｙ  Ａ Ｎ Ａ Ｌ Ｙ Ｓ Ｉ Ｓ"
-        step3 = "Ｐ Ａ Ｃ Ｋ Ａ Ｇ Ｅ  Ｉ Ｎ Ｓ Ｔ Ａ Ｌ Ｌ"
-        step4 = "Ａ Ｉ  Ｍ Ｏ Ｄ Ｅ Ｌ  Ｄ Ｏ Ｗ Ｎ Ｌ Ｏ Ａ Ｄ"
-        step5 = "Ｆ Ｉ Ｌ Ｅ  Ｄ Ｅ Ｐ Ｌ Ｏ Ｙ"
-        step6 = "Ｃ Ｏ Ｎ Ｆ Ｉ Ｇ  Ｇ Ｅ Ｎ Ｅ Ｒ Ａ Ｔ Ｅ"
-        step7 = "Ｓ Ｙ Ｓ Ｔ Ｅ Ｍ  Ｔ Ｅ Ｓ Ｔ"
-        hw_scan = "Scanning hardware..."
-        windows_ok = "Windows detected"
-        mem_scan = "Mapping memory space..."
-        mem_label = "System memory"
-        model_best = "Best for coding"
-        model_great = "Great for coding"
-        model_min = "Minimum viable"
-        model_recommend = "16GB+ RAM recommended"
-        mem_lack = "Insufficient memory"
-        mem_lack_min = "Minimum 8GB required"
-        manual_model = "Manual model"
-        installed = "installed"
-        installing = "Installing..."
-        install_done = "installed"
-        install_fail = "install failed"
-        install_fail_hint = "Please install manually, then re-run this script"
-        ollama_starting = "Starting Ollama..."
-        ollama_wait = "Waiting for Ollama"
-        model_downloading = "Downloading model..."
+        subtitle            = "  Ｆ Ｒ Ｅ Ｅ  Ａ Ｉ  Ｃ Ｏ Ｄ Ｉ Ｎ Ｇ  Ｅ Ｎ Ｖ Ｉ Ｒ Ｏ Ｎ Ｍ Ｅ Ｎ Ｔ"
+        tagline             = "No Network . Totally Free . Local AI Coding"
+        step1               = "Ｓ Ｙ Ｓ Ｔ Ｅ Ｍ  Ｓ Ｃ Ａ Ｎ"
+        step2               = "Ｍ Ｅ Ｍ Ｏ Ｒ Ｙ  Ａ Ｎ Ａ Ｌ Ｙ Ｓ Ｉ Ｓ"
+        step3               = "Ｐ Ａ Ｃ Ｋ Ａ Ｇ Ｅ  Ｉ Ｎ Ｓ Ｔ Ａ Ｌ Ｌ"
+        step4               = "Ａ Ｉ  Ｍ Ｏ Ｄ Ｅ Ｌ  Ｄ Ｏ Ｗ Ｎ Ｌ Ｏ Ａ Ｄ"
+        step5               = "Ｆ Ｉ Ｌ Ｅ  Ｄ Ｅ Ｐ Ｌ Ｏ Ｙ"
+        step6               = "Ｃ Ｏ Ｎ Ｆ Ｉ Ｇ  Ｇ Ｅ Ｎ Ｅ Ｒ Ａ Ｔ Ｅ"
+        step7               = "Ｓ Ｙ Ｓ Ｔ Ｅ Ｍ  Ｔ Ｅ Ｓ Ｔ"
+        hw_scan             = "Scanning hardware..."
+        windows_ok          = "Windows detected"
+        mem_scan            = "Mapping memory space..."
+        mem_label           = "System memory"
+        model_best          = "Best for coding"
+        model_great         = "Great for coding"
+        model_min           = "Minimum viable"
+        model_recommend     = "16GB+ RAM recommended"
+        mem_lack            = "Insufficient memory"
+        mem_lack_min        = "Minimum 8GB required"
+        manual_model        = "Manual model"
+        installed           = "installed"
+        installing          = "Installing..."
+        install_done        = "installed"
+        install_fail        = "install failed"
+        install_fail_hint   = "Please install manually, then re-run this script"
+        ollama_starting     = "Starting Ollama..."
+        ollama_wait         = "Waiting for Ollama"
+        model_downloading   = "Downloading model..."
         model_download_hint = "First download may take several minutes depending on size"
-        model_downloaded = "already downloaded"
-        model_dl_done = "download complete"
-        file_deploy = "Deploying files..."
-        source_local = "Source: local"
-        source_github = "Source: GitHub"
-        config_gen = "Generating config..."
-        config_exists = "Config exists -> keeping current settings"
-        config_file = "Config file"
-        path_added = "PATH added"
-        path_set = "PATH: already set"
-        diag = "Running system diagnostics..."
-        online = "ＯＮＬＩＮＥ"
-        standby = "ＳＴＡＮＤＢＹ"
-        ready = "ＲＥＡＤＹ"
-        warning = "ＷＡＲＮＩＮＧ"
-        loaded = "ＬＯＡＤＥＤ"
-        not_loaded = "not loaded"
-        complete = "ＩＮＳＴＡＬＬ  ＣＯＭＰＬＥＴＥ !!"
-        usage_label = "Usage:"
-        mode_interactive = "Interactive mode"
-        mode_oneshot = "One-shot"
-        mode_auto = "Auto-detect network"
-        settings_label = "Settings:"
-        label_model = "Model"
-        label_config = "Config"
-        label_command = "Command"
-        reopen = "Open a new terminal, then run vibe-local"
-        enjoy = "Ｅ Ｎ Ｊ Ｏ Ｙ  Ｆ Ｒ Ｅ Ｅ  Ａ Ｉ  Ｃ Ｏ Ｄ Ｉ Ｎ Ｇ"
+        model_downloaded    = "already downloaded"
+        model_dl_done       = "download complete"
+        file_deploy         = "Deploying files..."
+        source_local        = "Source: local"
+        source_github       = "Source: GitHub"
+        config_gen          = "Generating config..."
+        config_exists       = "Config exists -> keeping current settings"
+        config_file         = "Config file"
+        path_added          = "PATH added"
+        path_set            = "PATH: already set"
+        diag                = "Running system diagnostics..."
+        online              = "ＯＮＬＩＮＥ"
+        standby             = "ＳＴＡＮＤＢＹ"
+        ready               = "ＲＥＡＤＹ"
+        warning             = "ＷＡＲＮＩＮＧ"
+        loaded              = "ＬＯＡＤＥＤ"
+        not_loaded          = "not loaded"
+        complete            = "ＩＮＳＴＡＬＬ  ＣＯＭＰＬＥＴＥ !!"
+        usage_label         = "Usage:"
+        mode_interactive    = "Interactive mode"
+        mode_oneshot        = "One-shot"
+        mode_auto           = "Auto-detect network"
+        settings_label      = "Settings:"
+        label_model         = "Model"
+        label_config        = "Config"
+        label_command       = "Command"
+        reopen              = "Open a new terminal, then run vibe-local"
+        enjoy               = "Ｅ Ｎ Ｊ Ｏ Ｙ  Ｆ Ｒ Ｅ Ｅ  Ａ Ｉ  Ｃ Ｏ Ｄ Ｉ Ｎ Ｇ"
     }
     zh = @{
-        subtitle = "  免 费 Ａ Ｉ 编 程 环 境"
-        tagline = "无需网络 ・ 完全免费 ・ 本地AI编程"
-        step1 = "Ｓ Ｙ Ｓ Ｔ Ｅ Ｍ  Ｓ Ｃ Ａ Ｎ"
-        step2 = "Ｍ Ｅ Ｍ Ｏ Ｒ Ｙ  Ａ Ｎ Ａ Ｌ Ｙ Ｓ Ｉ Ｓ"
-        step3 = "Ｐ Ａ Ｃ Ｋ Ａ Ｇ Ｅ  Ｉ Ｎ Ｓ Ｔ Ａ Ｌ Ｌ"
-        step4 = "Ａ Ｉ  Ｍ Ｏ Ｄ Ｅ Ｌ  Ｄ Ｏ Ｗ Ｎ Ｌ Ｏ Ａ Ｄ"
-        step5 = "Ｆ Ｉ Ｌ Ｅ  Ｄ Ｅ Ｐ Ｌ Ｏ Ｙ"
-        step6 = "Ｃ Ｏ Ｎ Ｆ Ｉ Ｇ  Ｇ Ｅ Ｎ Ｅ Ｒ Ａ Ｔ Ｅ"
-        step7 = "Ｓ Ｙ Ｓ Ｔ Ｅ Ｍ  Ｔ Ｅ Ｓ Ｔ"
-        hw_scan = "扫描硬件中..."
-        windows_ok = "检测到 Windows"
-        mem_scan = "内存空间映射中..."
-        mem_label = "系统内存"
-        model_best = "编程最强"
-        model_great = "高性能编程"
-        model_min = "最低限运行"
-        model_recommend = "推荐16GB以上内存"
-        mem_lack = "内存不足"
-        mem_lack_min = "最少需要8GB"
-        manual_model = "手动指定模型"
-        installed = "已安装"
-        installing = "安装中..."
-        install_done = "安装完成"
-        install_fail = "安装失败"
-        install_fail_hint = "请手动安装后重新运行此脚本"
-        ollama_starting = "正在启动 Ollama..."
-        ollama_wait = "等待 Ollama 启动"
-        model_downloading = "下载模型中..."
+        subtitle            = "  免 费 Ａ Ｉ 编 程 环 境"
+        tagline             = "无需网络 ・ 完全免费 ・ 本地AI编程"
+        step1               = "Ｓ Ｙ Ｓ Ｔ Ｅ Ｍ  Ｓ Ｃ Ａ Ｎ"
+        step2               = "Ｍ Ｅ Ｍ Ｏ Ｒ Ｙ  Ａ Ｎ Ａ Ｌ Ｙ Ｓ Ｉ Ｓ"
+        step3               = "Ｐ Ａ Ｃ Ｋ Ａ Ｇ Ｅ  Ｉ Ｎ Ｓ Ｔ Ａ Ｌ Ｌ"
+        step4               = "Ａ Ｉ  Ｍ Ｏ Ｄ Ｅ Ｌ  Ｄ Ｏ Ｗ Ｎ Ｌ Ｏ Ａ Ｄ"
+        step5               = "Ｆ Ｉ Ｌ Ｅ  Ｄ Ｅ Ｐ Ｌ Ｏ Ｙ"
+        step6               = "Ｃ Ｏ Ｎ Ｆ Ｉ Ｇ  Ｇ Ｅ Ｎ Ｅ Ｒ Ａ Ｔ Ｅ"
+        step7               = "Ｓ Ｙ Ｓ Ｔ Ｅ Ｍ  Ｔ Ｅ Ｓ Ｔ"
+        hw_scan             = "扫描硬件中..."
+        windows_ok          = "检测到 Windows"
+        mem_scan            = "内存空间映射中..."
+        mem_label           = "系统内存"
+        model_best          = "编程最强"
+        model_great         = "高性能编程"
+        model_min           = "最低限运行"
+        model_recommend     = "推荐16GB以上内存"
+        mem_lack            = "内存不足"
+        mem_lack_min        = "最少需要8GB"
+        manual_model        = "手动指定模型"
+        installed           = "已安装"
+        installing          = "安装中..."
+        install_done        = "安装完成"
+        install_fail        = "安装失败"
+        install_fail_hint   = "请手动安装后重新运行此脚本"
+        ollama_starting     = "正在启动 Ollama..."
+        ollama_wait         = "等待 Ollama 启动"
+        model_downloading   = "下载模型中..."
         model_download_hint = "首次下载可能需要几分钟到几十分钟"
-        model_downloaded = "已下载"
-        model_dl_done = "下载完成"
-        file_deploy = "部署文件中..."
-        source_local = "来源: 本地"
-        source_github = "来源: GitHub"
-        config_gen = "生成配置文件中..."
-        config_exists = "配置文件已存在 → 保持现有设置"
-        config_file = "配置文件"
-        path_added = "PATH 已添加"
-        path_set = "PATH: 已设置"
-        diag = "运行系统诊断..."
-        online = "ＯＮＬＩＮＥ"
-        standby = "ＳＴＡＮＤＢＹ"
-        ready = "ＲＥＡＤＹ"
-        warning = "ＷＡＲＮＩＮＧ"
-        loaded = "ＬＯＡＤＥＤ"
-        not_loaded = "未加载"
-        complete = "安 装 完 成 !!"
-        usage_label = "使用方法:"
-        mode_interactive = "交互模式"
-        mode_oneshot = "单次执行"
-        mode_auto = "自动检测网络"
-        settings_label = "设置:"
-        label_model = "模型"
-        label_config = "配置"
-        label_command = "命令"
-        reopen = "打开新终端后运行 vibe-local"
-        enjoy = "享 受 免 费 Ａ Ｉ 编 程"
+        model_downloaded    = "已下载"
+        model_dl_done       = "下载完成"
+        file_deploy         = "部署文件中..."
+        source_local        = "来源: 本地"
+        source_github       = "来源: GitHub"
+        config_gen          = "生成配置文件中..."
+        config_exists       = "配置文件已存在 → 保持现有设置"
+        config_file         = "配置文件"
+        path_added          = "PATH 已添加"
+        path_set            = "PATH: 已设置"
+        diag                = "运行系统诊断..."
+        online              = "ＯＮＬＩＮＥ"
+        standby             = "ＳＴＡＮＤＢＹ"
+        ready               = "ＲＥＡＤＹ"
+        warning             = "ＷＡＲＮＩＮＧ"
+        loaded              = "ＬＯＡＤＥＤ"
+        not_loaded          = "未加载"
+        complete            = "安 装 完 成 !!"
+        usage_label         = "使用方法:"
+        mode_interactive    = "交互模式"
+        mode_oneshot        = "单次执行"
+        mode_auto           = "自动检测网络"
+        settings_label      = "设置:"
+        label_model         = "模型"
+        label_config        = "配置"
+        label_command       = "命令"
+        reopen              = "打开新终端后运行 vibe-local"
+        enjoy               = "享 受 免 费 Ａ Ｉ 编 程"
     }
 }
 
@@ -379,7 +380,8 @@ Vapor-Info "OS: Windows / Arch: $Arch"
 
 if ($Arch -eq "AMD64" -or $Arch -eq "ARM64") {
     Vapor-Success "$(msg 'windows_ok') ($Arch)"
-} else {
+}
+else {
     Vapor-Error "Unsupported architecture: $Arch"
     exit 1
 }
@@ -392,7 +394,8 @@ Step-Header 2 (msg 'step2')
 try {
     $TotalMem = (Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory
     $RamGB = [math]::Floor($TotalMem / 1073741824)
-} catch {
+}
+catch {
     $RamGB = 16
     Vapor-Warn "Could not detect RAM, assuming ${RamGB}GB"
 }
@@ -406,23 +409,27 @@ $SidecarModel = ""
 if ($Model) {
     $SelectedModel = $Model
     Vapor-Info "$(msg 'manual_model'): $SelectedModel"
-} elseif ($RamGB -ge 32) {
+}
+elseif ($RamGB -ge 32) {
     $SelectedModel = "qwen3-coder:30b"
     $SidecarModel = "qwen3:8b"
     Write-Host "  ${NEON_GREEN}|${NC} ${BOLD}${YELLOW}*** BEST MODEL ***${NC}"
     Write-Host "  ${NEON_GREEN}|${NC}    ${BOLD}${WHITE}${SelectedModel}${NC} ${DIM}(19GB, MoE 3.3B active, $(msg 'model_best'))${NC}"
     Write-Host "  ${NEON_GREEN}|${NC}    ${DIM}+ sidecar: ${SidecarModel} (5GB, fast helper)${NC}"
-} elseif ($RamGB -ge 16) {
+}
+elseif ($RamGB -ge 16) {
     $SelectedModel = "qwen3:8b"
     $SidecarModel = "qwen3:1.7b"
     Write-Host "  ${MINT}|${NC} ${BOLD}${CYAN}** GREAT MODEL **${NC}"
     Write-Host "  ${MINT}|${NC}    ${BOLD}${WHITE}${SelectedModel}${NC} ${DIM}(5GB, $(msg 'model_great'))${NC}"
     Write-Host "  ${MINT}|${NC}    ${DIM}+ sidecar: ${SidecarModel} (1.1GB, fast helper)${NC}"
-} elseif ($RamGB -ge 8) {
+}
+elseif ($RamGB -ge 8) {
     $SelectedModel = "qwen3:1.7b"
     Vapor-Warn "$SelectedModel (1.1GB, $(msg 'model_min'))"
     Vapor-Warn (msg 'model_recommend')
-} else {
+}
+else {
     Vapor-Error "$(msg 'mem_lack'): ${RamGB}GB ($(msg 'mem_lack_min'))"
     exit 1
 }
@@ -453,7 +460,8 @@ foreach ($pyCmd in @("py", "python3", "python")) {
 if ($PythonCmd) {
     $pyVer = & $PythonCmd --version 2>&1
     Vapor-Success "Python $(msg 'installed') ($pyVer)"
-} else {
+}
+else {
     Vapor-Info "Python $(msg 'installing')"
     $pythonInstalled = $false
 
@@ -474,7 +482,8 @@ if ($PythonCmd) {
             if ($pythonInstalled) {
                 Vapor-Success "Python $(msg 'install_done') (winget)"
             }
-        } catch {}
+        }
+        catch {}
     }
 
     # Method 2: Try Microsoft Store python (available without winget)
@@ -488,7 +497,8 @@ if ($PythonCmd) {
                 $pythonInstalled = $true
                 Vapor-Success "Python $(msg 'install_done') (Microsoft Store)"
             }
-        } catch {}
+        }
+        catch {}
     }
 
     if (-not $pythonInstalled) {
@@ -534,7 +544,8 @@ if (-not $ollamaFound) {
 if ($ollamaFound) {
     $ollamaVer = ollama --version 2>&1
     Vapor-Success "Ollama $(msg 'installed') ($ollamaVer)"
-} else {
+}
+else {
     Vapor-Info "Ollama $(msg 'installing')"
     $ollamaInstalled = $false
 
@@ -549,7 +560,8 @@ if ($ollamaFound) {
                 $ollamaInstalled = $true
                 Vapor-Success "Ollama $(msg 'install_done') (winget)"
             }
-        } catch {}
+        }
+        catch {}
     }
 
     # Method 2: Direct download from ollama.com
@@ -583,7 +595,8 @@ if ($ollamaFound) {
             }
             # Clean up installer
             Remove-Item $ollamaSetup -Force -ErrorAction SilentlyContinue
-        } catch {
+        }
+        catch {
             Vapor-Warn "Direct download failed: $($_.Exception.Message)"
         }
     }
@@ -603,7 +616,8 @@ if ($ollamaFound) {
 # --- Claude Code CLI (optional, for --auto mode fallback) ---
 if (Get-Command claude -ErrorAction SilentlyContinue) {
     Vapor-Success "Claude Code CLI $(msg 'installed') [optional]"
-} else {
+}
+else {
     Vapor-Info "Claude Code CLI not installed (optional - vibe-coder replaces it)"
 }
 
@@ -619,7 +633,8 @@ try {
     if ($freeGB -lt 20) {
         Vapor-Warn "Low disk space: ${freeGB}GB available (20GB+ recommended)"
     }
-} catch { }
+}
+catch { }
 
 # Ensure Ollama is running
 $ollamaRunning = $false
@@ -627,7 +642,8 @@ try {
     # PS 5.1 needs ~2s for first .NET HTTP call; use 5s timeout to avoid false negatives
     $resp = Invoke-WebRequest -Uri "http://localhost:11434/api/tags" -TimeoutSec 5 -UseBasicParsing -ErrorAction Stop
     $ollamaRunning = ($resp.StatusCode -eq 200)
-} catch {}
+}
+catch {}
 
 if (-not $ollamaRunning) {
     # Refresh PATH in case Ollama was just installed in Step 3
@@ -645,14 +661,17 @@ if (-not $ollamaRunning) {
     if ($ollamaCmd) {
         try {
             Start-Process ollama -ArgumentList "serve" -WindowStyle Hidden
-        } catch {
+        }
+        catch {
             Vapor-Warn "Could not start Ollama process"
         }
-    } else {
+    }
+    else {
         # Ollama might be installed as a Windows service
         try {
             Restart-Service "Ollama" -ErrorAction Stop
-        } catch {
+        }
+        catch {
             Vapor-Warn "Could not start Ollama automatically"
         }
     }
@@ -664,13 +683,15 @@ if (-not $ollamaRunning) {
             $resp = Invoke-WebRequest -Uri "http://localhost:11434/api/tags" -TimeoutSec 5 -UseBasicParsing -ErrorAction Stop
             $ollamaRunning = ($resp.StatusCode -eq 200)
             break
-        } catch {}
+        }
+        catch {}
     }
     Write-Host "`r$(' ' * 50)"
 
     if ($ollamaRunning) {
         Vapor-Success "Ollama $(msg 'online')"
-    } else {
+    }
+    else {
         Vapor-Error "Ollama failed to start after 30 seconds."
         Write-Host ""
         Write-Host "  ${BOLD}${WHITE}Possible causes:${NC}"
@@ -699,7 +720,8 @@ function Download-Model {
             Vapor-Success "$modelName $(msg 'model_downloaded') $label"
             return $true
         }
-    } catch {}
+    }
+    catch {}
 
     Write-Host ""
     Write-Host "  ${PINK}##${MAGENTA}##${PURPLE}##${CYAN}##${AQUA}##${MINT}##${NEON_GREEN}##${YELLOW}##${ORANGE}##${CORAL}##${HOT_PINK}##${NC}"
@@ -719,7 +741,8 @@ function Download-Model {
             Vapor-Success "$modelName $(msg 'model_dl_done') $label"
             return $true
         }
-    } catch {}
+    }
+    catch {}
 
     Vapor-Warn "$modelName $(msg 'install_fail') - ollama pull $modelName"
     return $false
@@ -752,7 +775,8 @@ try {
     $testFile = Join-Path $LibDir ".write-test"
     [IO.File]::WriteAllText($testFile, "test")
     Remove-Item $testFile -Force
-} catch {
+}
+catch {
     Vapor-Error "Cannot write to $LibDir"
     Write-Host "  Check folder permissions and try running as Administrator."
     exit 1
@@ -767,29 +791,39 @@ if ($ScriptDir -and (Test-Path (Join-Path $ScriptDir "vibe-coder.py"))) {
     Copy-Item (Join-Path $ScriptDir "vibe-coder.py") -Destination $LibDir -Force
     Copy-Item (Join-Path $ScriptDir "vibe-local.ps1") -Destination $BinDir -Force
     Copy-Item (Join-Path $ScriptDir "vibe-local.cmd") -Destination $BinDir -Force
-} else {
-    $RepoRaw = "https://raw.githubusercontent.com/ochyai/vibe-local/main"
+}
+else {
+    $RepoRaw = "https://raw.githubusercontent.com/cenktekin/vibe-local/main"
     Vapor-Info (msg 'source_github')
     try {
         Invoke-WebRequest -Uri "$RepoRaw/vibe-coder.py" -OutFile (Join-Path $LibDir "vibe-coder.py") -ErrorAction Stop
-    } catch {
+    }
+    catch {
         Vapor-Error "Failed to download vibe-coder.py from GitHub"
         Write-Host "  Check your internet connection or try again later."
         exit 1
     }
     try {
         Invoke-WebRequest -Uri "$RepoRaw/vibe-local.ps1" -OutFile (Join-Path $BinDir "vibe-local.ps1") -ErrorAction Stop
-    } catch {
+    }
+    catch {
         Vapor-Error "Failed to download vibe-local.ps1 from GitHub"
         Write-Host "  Check your internet connection or try again later."
         exit 1
     }
     try {
         Invoke-WebRequest -Uri "$RepoRaw/vibe-local.cmd" -OutFile (Join-Path $BinDir "vibe-local.cmd") -ErrorAction Stop
-    } catch {
+    }
+    catch {
         Vapor-Error "Failed to download vibe-local.cmd from GitHub"
         Write-Host "  Check your internet connection or try again later."
         exit 1
+    }
+    try {
+        Invoke-WebRequest -Uri "$RepoRaw/requirements.txt" -OutFile (Join-Path $LibDir "requirements.txt") -ErrorAction Stop
+    }
+    catch {
+        Vapor-Warn "Failed to download requirements.txt from GitHub"
     }
 }
 
@@ -810,7 +844,8 @@ Vaporwave-Progress (msg 'config_gen') 1000
 
 if (Test-Path $ConfigFile) {
     Vapor-Warn (msg 'config_exists')
-} else {
+}
+else {
     $configContent = @"
 # vibe-local config
 # Auto-generated: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')
@@ -830,7 +865,8 @@ if ($currentPath -notlike "*$BinDir*") {
     [Environment]::SetEnvironmentVariable("PATH", "$BinDir;$currentPath", "User")
     $env:PATH = "$BinDir;$env:PATH"
     Vapor-Success "$(msg 'path_added') -> $BinDir"
-} else {
+}
+else {
     Vapor-Success (msg 'path_set')
 }
 
@@ -847,7 +883,8 @@ Write-Host ""
 try {
     $resp = Invoke-WebRequest -Uri "http://localhost:11434/api/tags" -TimeoutSec 5 -UseBasicParsing -ErrorAction Stop
     Vapor-Success "Ollama Server       -> $(msg 'online')"
-} catch {
+}
+catch {
     Vapor-Warn "Ollama Server       -> $(msg 'standby')"
 }
 
@@ -862,11 +899,13 @@ if ($testPy -and (Test-Path $vibeCoderScript)) {
     try {
         if ($testPy -eq "py") {
             & py -3 -c "import ast, sys; ast.parse(open(sys.argv[1]).read())" "$vibeCoderScript" 2>&1 | Out-Null
-        } else {
+        }
+        else {
             & $testPy -c "import ast, sys; ast.parse(open(sys.argv[1]).read())" "$vibeCoderScript" 2>&1 | Out-Null
         }
         Vapor-Success "vibe-coder.py       -> $(msg 'ready')"
-    } catch {
+    }
+    catch {
         Vapor-Warn "vibe-coder.py       -> $(msg 'warning') (syntax error)"
     }
 }
@@ -874,7 +913,8 @@ if ($testPy -and (Test-Path $vibeCoderScript)) {
 # Claude Code CLI (optional)
 if (Get-Command claude -ErrorAction SilentlyContinue) {
     Vapor-Info "Claude Code CLI     -> available (optional, for --auto mode)"
-} else {
+}
+else {
     Vapor-Info "Claude Code CLI     -> not installed (not needed)"
 }
 
@@ -885,18 +925,38 @@ try {
     $found = $tags.models | Where-Object { $_.name -eq $SelectedModel }
     if ($found) {
         Vapor-Success "AI Model ($SelectedModel) -> $(msg 'loaded')"
-    } else {
+    }
+    else {
         Vapor-Warn "AI Model ($SelectedModel) -> $(msg 'not_loaded')"
     }
     if ($SidecarModel -and $SidecarModel -ne $SelectedModel) {
         $foundSc = $tags.models | Where-Object { $_.name -eq $SidecarModel }
         if ($foundSc) {
             Vapor-Success "Sidecar  ($SidecarModel) -> $(msg 'loaded')"
-        } else {
+        }
+        else {
             Vapor-Warn "Sidecar  ($SidecarModel) -> $(msg 'not_loaded')"
         }
     }
-} catch {}
+}
+catch {}
+
+# Install requirements.txt via pip
+if ($testPy -and (Test-Path (Join-Path $LibDir "requirements.txt"))) {
+    Vapor-Info "Installing dependencies from requirements.txt..."
+    try {
+        if ($testPy -eq "py") {
+            & py -3 -m pip install -r (Join-Path $LibDir "requirements.txt") 2>&1 | Out-Null
+        }
+        else {
+            & $testPy -m pip install -r (Join-Path $LibDir "requirements.txt") 2>&1 | Out-Null
+        }
+        Vapor-Success "Dependencies installed via pip"
+    }
+    catch {
+        Vapor-Warn "Dependencies install failed"
+    }
+}
 
 # ╔══════════════════════════════════════════════════════════════╗
 # ║  🎆  Ｃ Ｏ Ｍ Ｐ Ｌ Ｅ Ｔ Ｅ !!                           ║

@@ -1,6 +1,6 @@
-﻿# vibe-local.ps1
+# vibe-local.ps1
 # Windows launcher for vibe-local
-# Uses vibe-coder.py directly — no proxy, no Node.js, no Claude Code needed
+# Uses vibe-coder.py directly � no proxy, no Node.js, no Claude Code needed
 #
 # NOTE: This project is NOT affiliated with, endorsed by, or associated with Anthropic.
 #
@@ -36,7 +36,7 @@ for ($i = 0; $i -lt $args.Count; $i++) {
 
 $ErrorActionPreference = "Continue"
 
-# --- UTF-8 encoding fix (PowerShell 文字化け対策) ---
+# --- UTF-8 encoding fix (PowerShell ??????) ---
 try {
     [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
     [Console]::InputEncoding = [System.Text.Encoding]::UTF8
@@ -146,7 +146,7 @@ function Ensure-Ollama {
         return $true
     }
 
-    # Not running — check if ollama command exists
+    # Not running � check if ollama command exists
     $ollamaCmd = Get-Command ollama -ErrorAction SilentlyContinue
     if (-not $ollamaCmd) {
         Write-Host "Error: Ollama is not installed." -ForegroundColor Red
