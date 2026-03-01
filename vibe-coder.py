@@ -29,7 +29,15 @@ import threading
 import unicodedata
 import urllib.request
 import urllib.error
-import urllib.parse
+from urllib.parse import urlparse
+import glob
+from pprint import pprint
+
+try:
+    import tomllib
+    HAS_TOML = True
+except ImportError:
+    HAS_TOML = False
 import hashlib
 import traceback
 import base64
@@ -714,6 +722,14 @@ class Config:
         self.max_tokens = self.DEFAULT_MAX_TOKENS
         self.temperature = self.DEFAULT_TEMPERATURE
         self.context_window = self.DEFAULT_CONTEXT_WINDOW
+        self.autonomy = {
+            "level": "full",
+            "workspace_only": False,
+            "allowed_commands": [],
+            "forbidden_paths": [],
+            "network_access": True,
+            "require_approval_for": []
+        }
         self.prompt = None          # -p one-shot prompt
         self.yes_mode = False       # -y auto-approve
         self.debug = False
@@ -776,6 +792,49 @@ class Config:
             self._parse_config_file(cfg_path)
 
     def _parse_config_file(self, cfg_path):
+        if cfg_path.endswith(".toml"):
+            if not HAS_TOML:
+                _print_warn(f"Warning: Python 3.11+ is required to parse {cfg_path}. Skipping.")
+                return
+            try:
+                with open(cfg_path, "rb") as f:
+                    data = tomllib.load(f)
+                
+                # Parse standard config keys from root of TOML if present
+                for key, val in data.items():
+                    if key.upper() == "MODEL" and isinstance(val, str):
+                        self.model = val
+                    elif key.upper() == "SIDECAR_MODEL" and isinstance(val, str):
+                        self.sidecar_model = val
+                    elif key.upper() == "OLLAMA_HOST" and isinstance(val, str):
+                        self.ollama_host = val
+                    elif key.upper() == "MAX_TOKENS" and isinstance(val, int):
+                        self.max_tokens = val
+                    elif key.upper() == "TEMPERATURE" and isinstance(val, (int, float)):
+                        self.temperature = float(val)
+                    elif key.upper() == "CONTEXT_WINDOW" and isinstance(val, int):
+                        self.context_window = val
+                
+                # Merge Autonomy settings
+                if "autonomy" in data and isinstance(data["autonomy"], dict):
+                    auto = data["autonomy"]
+                    if "level" in auto:
+                        self.autonomy["level"] = str(auto["level"])
+                    if "workspace_only" in auto:
+                        self.autonomy["workspace_only"] = bool(auto["workspace_only"])
+                    if "network_access" in auto:
+                        self.autonomy["network_access"] = bool(auto["network_access"])
+                    if "allowed_commands" in auto and isinstance(auto["allowed_commands"], list):
+                        self.autonomy["allowed_commands"] = [str(x) for x in auto["allowed_commands"]]
+                    if "forbidden_paths" in auto and isinstance(auto["forbidden_paths"], list):
+                        self.autonomy["forbidden_paths"] = [str(x) for x in auto["forbidden_paths"]]
+                    if "require_approval_for" in auto and isinstance(auto["require_approval_for"], list):
+                        self.autonomy["require_approval_for"] = [str(x) for x in auto["require_approval_for"]]
+            except (OSError, IOError, Exception) as e:
+                _print_warn(f"Warning: Failed to parse TOML {cfg_path}: {e}")
+            return
+
+        # Legacy .json / .txt format parsing
         try:
             with open(cfg_path, encoding="utf-8-sig") as f:
                 for line in f:
@@ -2244,6 +2303,9 @@ class BashTool(Tool):
         "required": ["command"],
     }
 
+    def __init__(self, config=None):
+        self.config = config
+
     def _build_clean_env(self):
         """Build sanitized environment dict, stripping secrets."""
         _ALWAYS_ALLOW = {
@@ -2367,6 +2429,35 @@ class BashTool(Tool):
         for ppath in _PROTECTED_BASENAMES:
             if ppath in cmd_lower and any(w in cmd_lower for w in _WRITE_INDICATORS):
                 return f"Error: writing to {ppath} via shell is blocked for security. Use the config system instead."
+
+        # --- Autonomy Sandbox Enforcement ---
+        if self.config and getattr(self.config, "autonomy", None):
+            auto = self.config.autonomy
+            
+            if auto.get("workspace_only", False):
+                if "cd .." in cmd_lower or "cd /" in cmd_lower or "cd \\" in cmd_lower:
+                    return "Error: Autonomy[workspace_only] is enabled. Cannot navigate outside workspace."
+                
+            allowed = auto.get("allowed_commands", [])
+            if allowed:
+                parts = command.strip().split()
+                if parts:
+                    root_cmd = parts[0].lower()
+                    if root_cmd not in [c.lower() for c in allowed]:
+                        return f"Error: Autonomy[allowed_commands] is active. Command '{root_cmd}' is not in the whitelist: {allowed}"
+            
+            if not auto.get("network_access", True):
+                if re.search(r'\b(curl|wget|ssh|ftp|scp|sftp|nc|ncat|ping|telnet|git clone)\b', cmd_lower):
+                    return "Error: Autonomy[network_access] is disabled. Network commands are blocked."
+            
+            forbidden = auto.get("forbidden_paths", [])
+            if forbidden:
+                parts = command.split()
+                for fpath in forbidden:
+                    for p in parts:
+                        if fnmatch.fnmatch(p.lower(), fpath.lower()) or fpath.lower() in p.lower():
+                            return f"Error: Autonomy[forbidden_paths] triggered. Access to {fpath} is blocked."
+        # --- End Autonomy Sandbox ---
 
         # --- End security checks ---
 
@@ -4982,13 +5073,16 @@ class ToolRegistry:
             self._cached_schemas = [t.get_schema() for t in self._tools.values()]
         return self._cached_schemas
 
-    def register_defaults(self):
+    def register_defaults(self, config=None):
         """Register all built-in tools."""
         for cls in [BashTool, ReadTool, WriteTool, EditTool, GlobTool,
                     GrepTool, WebFetchTool, WebSearchTool, NotebookEditTool,
                     TaskCreateTool, TaskListTool, TaskGetTool, TaskUpdateTool,
                     AskUserQuestionTool]:
-            self.register(cls())
+            if cls is BashTool and config is not None:
+                self.register(cls(config))
+            else:
+                self.register(cls())
         return self
 
 
@@ -5005,19 +5099,25 @@ class PermissionMgr:
     NETWORK_TOOLS = {"WebFetch", "WebSearch"}
 
     def __init__(self, config):
+        self.config = config
         self.yes_mode = config.yes_mode
         self.rules = {}  # tool_name -> "allow" | "deny" | pattern list
         self._session_allows = set()  # remembered "allow" decisions this session
         self._session_denies = set()  # remembered "deny" decisions this session
         self._load_rules(config.permissions_file)
 
-    # Dangerous commands that require confirmation even in -y mode
-    _ALWAYS_CONFIRM_PATTERNS = [
-        r'\brm\s+-rf\s+/',       # rm -rf from root
-        r'\bsudo\b',             # sudo commands
-        r'\bmkfs\b',             # format filesystem
-        r'\bdd\b.*\bof=/dev/',   # dd to device
-    ]
+        # Dangerous commands that require confirmation even in -y mode
+        self._always_confirm_patterns = [
+            r'\brm\s+-rf\s+/',       # rm -rf from root
+            r'\bsudo\b',             # sudo commands
+            r'\bmkfs\b',             # format filesystem
+            r'\bdd\b.*\bof=/dev/',   # dd to device
+        ]
+        
+        if config and hasattr(config, "autonomy"):
+            req_appr = config.autonomy.get("require_approval_for", [])
+            for pat in req_appr:
+                self._always_confirm_patterns.append(rf'\b{re.escape(pat)}\b')
 
     def _load_rules(self, path):
         if not os.path.isfile(path):
@@ -5050,7 +5150,7 @@ class PermissionMgr:
         # Even in -y mode, confirm truly dangerous Bash commands
         if tool_name == "Bash" and self.yes_mode:
             cmd = params.get("command", "")
-            for pat in self._ALWAYS_CONFIRM_PATTERNS:
+            for pat in self._always_confirm_patterns:
                 if re.search(pat, cmd, re.IGNORECASE):
                     if tui:
                         result = tui.ask_permission(tool_name, params)
