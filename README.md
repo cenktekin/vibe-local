@@ -9,9 +9,17 @@
 A single-file Python agent that operates efficiently in your terminal. It connects directly to Ollama to provide an completely offline, lightning-fast coding agent. 
 
 ### What's new in this Fork?
-- **NumPy RAG Acceleration**: Scans codebases using C-level tensor calculations instead of native Python loops.
-- **SSRF & Path Traversal Protections**: Hardened file access and network tools.
-- **Token Caching & OOM Prevention**: Faster context re-calculation and memory scaling limits.
+This repository contains exclusive local optimizations that make the agent significantly faster and more secure:
+
+- **Autonomy Sandboxing (Defense in Depth)**: Supports `vibe-coder.toml` configurations for strict bounds.
+  - `workspace_only`: Blocks the agent from accessing or editing files outside the project root.
+  - `allowed_commands` & `forbidden_paths`: Whitelist/blacklist control over the terminal execution.
+  - `network_access`: Blocks the terminal from downloading payloads via `curl/wget` when disabled.
+  - `require_approval_for`: Aggressive interception that always asks for user permission on destructive commands (like `rm` or `format`), even if auto-approve (`-y`) is on.
+- **NumPy RAG Acceleration**: Scans codebases using C-level tensor calculations instead of native Python loops. Automatically falls back to standard python math if `numpy` is missing.
+- **Token Caching**: Uses `functools.lru_cache` to prevent redundant HTTP requests to Ollama's API for token counting. Dramatically speeds up context re-calculation.
+- **OOM Prevention & Security**: Hardened file access. `ReadTool` size boundary reduced to 2MB to prevent context exhaustion. WebFetchTool includes SSRF loopback protections.
+- **Standalone Installers**: The customized `install.ps1/sh` wrappers inherently install Python dependencies (`requirements.txt`) and do not auto-overwrite themselves with upstream logic.
 
 ---
 
