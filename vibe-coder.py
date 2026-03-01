@@ -6150,8 +6150,9 @@ class TUI:
                 return "\n".join(lines)
 
             # Auto-detect multi-line paste:
-            # If there's more data in the stdin buffer immediately after the first line,
-            # or if IME mode is active, enter continuation mode automatically.
+            # When Windows Terminal shows the "paste anyway" warning, it dumps
+            # the text very rapidly after being dismissed.
+            time.sleep(0.05)
             is_paste = _has_stdin_data()
             if ((self._is_cjk or is_paste) and
                     first_line.strip() and
