@@ -40,6 +40,13 @@ from abc import ABC, abstractmethod
 from datetime import datetime
 import collections
 import concurrent.futures
+import functools
+
+try:
+    import numpy as np
+    HAS_NUMPY = True
+except ImportError:
+    HAS_NUMPY = False
 
 # readline is not available on Windows
 try:
@@ -98,7 +105,7 @@ def _cleanup_scroll_region():
 
 atexit.register(_cleanup_scroll_region)
 
-__version__ = "1.3.2"
+__version__ = "1.3.2-optimized"
 
 # ════════════════════════════════════════════════════════════════════════════════
 # ANSI Colors
@@ -1779,6 +1786,7 @@ class OllamaClient:
             except Exception:
                 pass
 
+    @functools.lru_cache(maxsize=1000)
     def tokenize(self, model, text):
         """Count tokens via Ollama /api/tokenize. Falls back to len//4."""
         try:
@@ -1941,6 +1949,16 @@ class RAGEngine:
     @staticmethod
     def _cosine_similarity(a, b):
         """Compute cosine similarity between two vectors."""
+        if HAS_NUMPY:
+            vec_a = np.array(a, dtype=np.float32)
+            vec_b = np.array(b, dtype=np.float32)
+            norm_a = np.linalg.norm(vec_a)
+            norm_b = np.linalg.norm(vec_b)
+            if norm_a == 0 or norm_b == 0:
+                return 0.0
+            return float(np.dot(vec_a, vec_b) / (norm_a * norm_b))
+        
+        # Fallback to pure python if numpy is missing
         dot = sum(x * y for x, y in zip(a, b))
         norm_a = sum(x * x for x in a) ** 0.5
         norm_b = sum(x * x for x in b) ** 0.5
@@ -2535,6 +2553,9 @@ class ReadTool(Tool):
         # Use resolved path for actual reading
         file_path = real_path
 
+        if not _is_safe_path(file_path):
+            return f"Error: Path traversal blocked. Cannot access {file_path} outside workspace ({os.getcwd()})."
+
         # Detect file extension for special handling
         _, ext = os.path.splitext(file_path)
         ext_lower = ext.lower()
@@ -2598,11 +2619,11 @@ class ReadTool(Tool):
             except Exception as e:
                 return f"Error reading image file: {e}"
 
-        # Check file size (100MB limit)
+        # Check file size (2MB limit)
         try:
             file_size = os.path.getsize(file_path)
-            if file_size > 100_000_000:
-                return f"Error: file too large ({file_size // 1_000_000}MB). Max 100MB."
+            if file_size > 2_000_000:
+                return f"Error: file too large ({file_size // 1_000_000}MB). Max 2MB. Use GrepTool instead."
         except OSError as e:
             return f"Error: cannot determine file size: {e}"
 
@@ -2730,6 +2751,17 @@ class ReadTool(Tool):
         return result
 
 
+def _is_safe_path(file_path):
+    """Check if a file path is within the current workspace."""
+    try:
+        real = os.path.realpath(file_path)
+        cwd = os.path.realpath(os.getcwd())
+        if not (real.startswith(cwd + os.sep) or real == cwd):
+            return False
+        return True
+    except (OSError, ValueError):
+        return False
+
 def _is_protected_path(file_path):
     """Check if a file path points to a protected config/permission file."""
     _PROTECTED_BASENAMES = {"permissions.json", ".vibe-coder.json"}
@@ -2799,6 +2831,8 @@ class WriteTool(Tool):
         # Block writes to protected config/permission files
         if _is_protected_path(file_path):
             return f"Error: writing to {os.path.basename(file_path)} is blocked for security. Use the config system instead."
+        if not _is_safe_path(file_path):
+            return f"Error: Path traversal blocked. Cannot access {file_path} outside workspace ({os.getcwd()})."
 
         tmp_path = None
         try:
@@ -2895,6 +2929,8 @@ class EditTool(Tool):
         # Block edits to protected config/permission files
         if _is_protected_path(file_path):
             return f"Error: editing {os.path.basename(file_path)} is blocked for security. Use the config system instead."
+        if not _is_safe_path(file_path):
+            return f"Error: Path traversal blocked. Cannot access {file_path} outside workspace ({os.getcwd()})."
 
         # File size guard — prevent OOM on huge files
         try:
@@ -5858,6 +5894,13 @@ class TUI:
                 _sc_tc = _tier_colors.get(_sc_tier, "250")
                 _sc_tier_str = " %s[Tier %s]%s" % (_ansi(chr(27) + "[38;5;%sm" % _sc_tc), _sc_tier, C.RESET)
             print(f"  🔄 {info_dim}Sidecar{C.RESET} {info_bright}{config.sidecar_model}{C.RESET}{_sc_tier_str}")
+        
+        # Custom Optimization Badges
+        _opt_color = _ansi(chr(27)+"[38;5;46m")
+        _np_status = f"{_opt_color}Active{C.RESET}" if HAS_NUMPY else f"{C.DIM}Inactive{C.RESET}"
+        print(f"  🛡️ {info_dim}Secured{C.RESET} {_opt_color}Yes{C.RESET} {C.DIM}(SSRF+Path Traversal){C.RESET}")
+        print(f"  🧮 {info_dim}NumPy RAG{C.RESET} {_np_status}")
+        
         print(f"  🔒 {info_dim}Mode{C.RESET}   {mode_str}")
         print(f"  🦙 {info_dim}Engine{C.RESET} {info_bright}Ollama{C.RESET} {C.DIM}({config.ollama_host}){C.RESET}")
         print(f"  💾 {info_dim}RAM{C.RESET}    {info_bright}{ram}GB{C.RESET} {C.DIM}(ctx: {config.context_window} tokens){C.RESET}")
