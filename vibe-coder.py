@@ -4580,6 +4580,22 @@ def _load_skills(config):
     return skills
 
 
+def _has_stdin_data():
+    """Check if there is unread data in stdin (e.g. during a multi-line paste)."""
+    if os.name == 'nt':
+        try:
+            import msvcrt
+            return msvcrt.kbhit()
+        except Exception:
+            return False
+    else:
+        try:
+            import select
+            r, _, _ = select.select([sys.stdin], [], [], 0.0)
+            return bool(r)
+        except Exception:
+            return False
+
 # ════════════════════════════════════════════════════════════════════════════════
 # Git Checkpoint & Rollback
 # ════════════════════════════════════════════════════════════════════════════════
@@ -6133,14 +6149,14 @@ class TUI:
                         return None
                 return "\n".join(lines)
 
-            # IME-safe mode: if input looks like it might continue
-            # (CJK locale and line doesn't end with command prefix),
-            # allow continuation with Enter, empty line sends
-            if (self._is_cjk and
+            # Auto-detect multi-line paste:
+            # If there's more data in the stdin buffer immediately after the first line,
+            # or if IME mode is active, enter continuation mode automatically.
+            is_paste = _has_stdin_data()
+            if ((self._is_cjk or is_paste) and
                     first_line.strip() and
                     not first_line.strip().startswith("/")):
-                # Show subtle hint on first use
-                if not hasattr(self, '_ime_hint_shown'):
+                if not hasattr(self, '_ime_hint_shown') and not is_paste:
                     self._ime_hint_shown = True
                     print(f"{C.DIM}  (IME mode: press Enter on empty line to send, \"\"\" for multiline){C.RESET}")
                 lines = [first_line]
